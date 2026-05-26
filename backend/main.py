@@ -13,9 +13,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("vic")
 
 app = FastAPI(title="Vic", version="0.1.0")
+import os as _os
+_allowed_origins = _os.environ.get("CORS_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

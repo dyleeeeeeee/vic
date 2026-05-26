@@ -34,8 +34,10 @@ class AgentStore {
   private reconnectDelay = 1000
 
   connect() {
-    const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const url = `${protocol}//${location.host}/ws`
+    const baseUrl = import.meta.env.VITE_WS_URL
+    const url = baseUrl
+      ? `${baseUrl}/ws`
+      : `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`
     this.ws = new WebSocket(url)
 
     this.ws.onopen = () => {

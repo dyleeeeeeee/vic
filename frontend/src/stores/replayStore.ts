@@ -41,7 +41,8 @@ class ReplayStore {
     const now = Date.now() / 1000
     const from = fromTs ?? now - 3600
     const to = toTs ?? now
-    const resp = await fetch(`/events?from_ts=${from}&to_ts=${to}`)
+    const apiBase = import.meta.env.VITE_API_URL || ''
+    const resp = await fetch(`${apiBase}/events?from_ts=${from}&to_ts=${to}`)
     if (!resp.ok) return
     this.events = await resp.json()
     this.currentIndex = 0
