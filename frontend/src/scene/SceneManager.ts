@@ -139,7 +139,7 @@ export class SceneManager {
     // Add or update agents
     for (const agent of current) {
       if (!this.agents.hasAgent(agent.id)) {
-        const pos = this.buildings.getSpawnPoint(agent.team)
+        const pos = this.buildings.getUniqueSpawnPoint(agent.id, agent.team)
         this.agents.addAgent(agent.id, agent.name, pos)
       }
       this.agents.updateStatus(agent.id, agent.status)

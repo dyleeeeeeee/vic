@@ -101,7 +101,37 @@ export class BuildingRenderer {
     return sprite
   }
 
+  // Returns a deterministic unique position for this agent within the team's building zone.
+  // Golden angle spiral ensures no two agents overlap regardless of how many spawn.
+  getUniqueSpawnPoint(agentId: string, team: string): THREE.Vector3 {
+    const base = this.spawnPoints.get(team) ?? new THREE.Vector3(0, 0, 0)
+
+    // Stable index from agent ID — same ID always gets same position
+    const idx = this.hashId(agentId) % 24
+
+    // Golden angle (~137.5°) spiral: maximally spreads points with no clustering
+    const GOLDEN_ANGLE = 2.39996323
+    const angle = idx * GOLDEN_ANGLE
+    // Radius grows with sqrt(idx) so inner slots stay tight, outer slots spread naturally
+    const radius = 0.4 + Math.sqrt(idx) * 0.45
+
+    return new THREE.Vector3(
+      base.x + Math.cos(angle) * radius,
+      0,
+      base.z + Math.sin(angle) * radius,
+    )
+  }
+
+  // Legacy — kept for anything that just needs the zone center
   getSpawnPoint(team: string): THREE.Vector3 {
-    return this.spawnPoints.get(team) || new THREE.Vector3(0, 0, 0)
+    return this.spawnPoints.get(team) ?? new THREE.Vector3(0, 0, 0)
+  }
+
+  private hashId(id: string): number {
+    let h = 0
+    for (let i = 0; i < id.length; i++) {
+      h = Math.imul(31, h) + id.charCodeAt(i) | 0
+    }
+    return Math.abs(h)
   }
 }
