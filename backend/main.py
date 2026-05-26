@@ -1,7 +1,6 @@
 import json
 import logging
 
-import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -147,4 +146,13 @@ async def get_events(from_ts: float = 0, to_ts: float = 0, agent_id: str = None)
 # ── entrypoint ────────────────────────────────
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8765, reload=True)
+    import subprocess, sys
+    subprocess.run([
+        sys.executable, "-m", "granian",
+        "--interface", "asgi",
+        "--host", "0.0.0.0",
+        "--port", "8765",
+        "--websockets",
+        "--reload",
+        "main:app",
+    ])

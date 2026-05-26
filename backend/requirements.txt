@@ -1,6 +1,6 @@
 anthropic>=0.40.0
 boto3>=1.35.0
 fastapi>=0.115.0
-uvicorn[standard]>=0.32.0
+granian>=1.6.0
 pydantic>=2.9.0
 websockets>=13.0
