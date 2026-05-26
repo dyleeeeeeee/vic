@@ -4,6 +4,11 @@ import { BuildingRenderer } from './BuildingRenderer'
 import { AgentRenderer } from './AgentRenderer'
 import { FogOfWar } from './FogOfWar'
 import { SpatialDrift } from './SpatialDrift'
+import { DayNightCycle } from './DayNightCycle'
+import { WeatherSystem } from './WeatherSystem'
+import { AmbientAudio } from './AmbientAudio'
+import { ScreenshotMode } from './ScreenshotMode'
+import { Minimap } from './Minimap'
 import { agentStore } from '../stores/agentStore'
 import { uiStore } from '../stores/uiStore'
 
@@ -17,6 +22,11 @@ export class SceneManager {
   private agents: AgentRenderer
   private fog: FogOfWar
   private drift: SpatialDrift
+  private dayNight: DayNightCycle
+  private weather: WeatherSystem
+  private audio: AmbientAudio
+  private screenshot: ScreenshotMode
+  private minimap: Minimap | null = null
   private animationId: number | null = null
   private unsubscribe: (() => void) | null = null
   private unsubEvents: (() => void) | null = null
@@ -54,12 +64,17 @@ export class SceneManager {
     this.agents = new AgentRenderer(this.scene)
     this.fog = new FogOfWar(this.scene)
     this.drift = new SpatialDrift()
+    this.dayNight = new DayNightCycle(this.scene)
+    this.weather = new WeatherSystem(this.scene)
+    this.audio = new AmbientAudio()
+    this.screenshot = new ScreenshotMode()
+    this.screenshot.setup(this.renderer, this.scene, this.camera)
 
     window.addEventListener('resize', this.onResize)
 
-    this.input.onAgentClick = (id) => uiStore.selectAgent(id)
+    this.input.onAgentClick = (id) => { this.audio.resume(); this.audio.init(); uiStore.selectAgent(id) }
     this.input.onAgentHover = (id) => uiStore.hoverAgent(id)
-    this.input.onEmptyClick = () => uiStore.selectAgent(null)
+    this.input.onEmptyClick = () => { this.audio.resume(); this.audio.init(); uiStore.selectAgent(null) }
   }
 
   private setupLighting() {
@@ -101,6 +116,7 @@ export class SceneManager {
 
   start() {
     this.buildings.createDefaultBuildings()
+    this.minimap = new Minimap(this.renderer, this.scene, this.camera, this.container)
 
     this.unsubscribe = agentStore.subscribe(() => this.syncAgents())
     this.unsubEvents = agentStore.onEvent((ev) => this.drift.ingestEvent(ev))
@@ -137,7 +153,17 @@ export class SceneManager {
     this.drift.update(delta)
     this.agents.update(delta, this.camera)
     this.fog.update(elapsed)
-    this.renderer.render(this.scene, this.camera)
+    this.dayNight.update()
+    this.weather.update(delta)
+    this.audio.update()
+
+    if (this.screenshot.isActive) {
+      this.screenshot.render()
+    } else {
+      this.renderer.render(this.scene, this.camera)
+    }
+
+    this.minimap?.render()
   }
 
   private onResize = () => {
@@ -160,6 +186,9 @@ export class SceneManager {
     window.removeEventListener('resize', this.onResize)
     this.input.dispose()
     this.fog.dispose()
+    this.weather.dispose()
+    this.audio.dispose()
+    this.minimap?.dispose()
     this.renderer.dispose()
     this.container.removeChild(this.renderer.domElement)
   }
