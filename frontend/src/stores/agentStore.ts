@@ -34,10 +34,8 @@ class AgentStore {
   private reconnectDelay = 1000
 
   connect() {
-    const baseUrl = import.meta.env.VITE_WS_URL
-    const url = baseUrl
-      ? `${baseUrl}/ws`
-      : `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`
+    const baseUrl = import.meta.env.VITE_WS_URL || 'wss://zesty-youth-production-7834.up.railway.app'
+    const url = `${baseUrl}/ws`
     this.ws = new WebSocket(url)
 
     this.ws.onopen = () => {
