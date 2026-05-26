@@ -22,12 +22,14 @@ export interface Message {
 }
 
 type Listener = () => void
+type EventHook = (event: any) => void
 
 class AgentStore {
   agents: Map<string, AgentState> = new Map()
   connected = false
   private ws: WebSocket | null = null
   private listeners: Set<Listener> = new Set()
+  private eventHooks: Set<EventHook> = new Set()
   private reconnectTimer: number | null = null
   private reconnectDelay = 1000
 
@@ -101,7 +103,13 @@ class AgentStore {
         }
         break
     }
+    for (const hook of this.eventHooks) hook(msg)
     this.notify()
+  }
+
+  onEvent(fn: EventHook): () => void {
+    this.eventHooks.add(fn)
+    return () => this.eventHooks.delete(fn)
   }
 
   private normalizeAgent(raw: any): AgentState {

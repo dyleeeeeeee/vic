@@ -1,11 +1,10 @@
 import asyncio
 import os
 import time
-from typing import Callable, Optional
-
-import anthropic
+from typing import Any, Callable, Optional
 
 from models import AgentState, AgentStatus, Message
+from llm_provider import LLMProvider, resolve_provider
 
 # ──────────────────────────────────────────────
 # Tool schemas exposed to every agent
@@ -89,17 +88,16 @@ class Agent:
     def __init__(
         self,
         state: AgentState,
-        api_key: str,
         on_update: Callable,          # async (state, message_text) -> None
         on_message_agent: Callable,   # async (from_id, to_id, message) -> None
         workdir: str,
+        api_key: Optional[str] = None,
     ):
         self.state = state
-        self.api_key = api_key
         self.on_update = on_update
         self.on_message_agent = on_message_agent
         self.workdir = workdir
-        self.client = anthropic.AsyncAnthropic(api_key=api_key)
+        self.provider: LLMProvider = resolve_provider(api_key)
 
         self._queue: asyncio.Queue = asyncio.Queue()
         self._running = False
@@ -150,29 +148,30 @@ class Agent:
         api_messages = self._build_api_messages()
 
         while True:
-            response = await self.client.messages.create(
+            response = await self.provider.create_message(
                 model=self.state.model,
-                max_tokens=4096,
                 system=self.state.system_prompt,
                 tools=TOOLS,
                 messages=api_messages,
+                max_tokens=4096,
             )
 
-            raw_blocks = [b.model_dump() for b in response.content]
+            content = response["content"]
+            raw_blocks = [b.model_dump() for b in content]
             self._append_message("assistant", raw_blocks,
-                                 text_preview=self._extract_text(response.content))
-            api_messages.append({"role": "assistant", "content": response.content})
+                                 text_preview=self._extract_text(content))
+            api_messages.append({"role": "assistant", "content": content})
 
-            if response.stop_reason == "end_turn":
-                final = self._extract_text(response.content) or "Done."
+            if response["stop_reason"] == "end_turn":
+                final = self._extract_text(content) or "Done."
                 self.state.status = AgentStatus.DONE
                 self.state.current_task = None
                 self.state.pending_question = None
                 await self.on_update(self.state, final)
                 break
 
-            if response.stop_reason == "tool_use":
-                tool_results = await self._handle_tool_calls(response.content)
+            if response["stop_reason"] == "tool_use":
+                tool_results = await self._handle_tool_calls(content)
 
                 # if we hit ask_user, wait for the answer before continuing
                 if self.state.status == AgentStatus.WAITING:

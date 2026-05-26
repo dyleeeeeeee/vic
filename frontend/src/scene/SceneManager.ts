@@ -2,6 +2,8 @@ import * as THREE from 'three'
 import { InputController } from './InputController'
 import { BuildingRenderer } from './BuildingRenderer'
 import { AgentRenderer } from './AgentRenderer'
+import { FogOfWar } from './FogOfWar'
+import { SpatialDrift } from './SpatialDrift'
 import { agentStore } from '../stores/agentStore'
 import { uiStore } from '../stores/uiStore'
 
@@ -13,8 +15,11 @@ export class SceneManager {
   private input: InputController
   private buildings: BuildingRenderer
   private agents: AgentRenderer
+  private fog: FogOfWar
+  private drift: SpatialDrift
   private animationId: number | null = null
   private unsubscribe: (() => void) | null = null
+  private unsubEvents: (() => void) | null = null
 
   constructor(private container: HTMLElement) {
     this.scene = new THREE.Scene()
@@ -47,6 +52,8 @@ export class SceneManager {
     this.input = new InputController(this.camera, this.renderer.domElement, this.scene)
     this.buildings = new BuildingRenderer(this.scene)
     this.agents = new AgentRenderer(this.scene)
+    this.fog = new FogOfWar(this.scene)
+    this.drift = new SpatialDrift()
 
     window.addEventListener('resize', this.onResize)
 
@@ -96,6 +103,7 @@ export class SceneManager {
     this.buildings.createDefaultBuildings()
 
     this.unsubscribe = agentStore.subscribe(() => this.syncAgents())
+    this.unsubEvents = agentStore.onEvent((ev) => this.drift.ingestEvent(ev))
     this.syncAgents()
 
     this.animate()
@@ -125,7 +133,10 @@ export class SceneManager {
   private animate = () => {
     this.animationId = requestAnimationFrame(this.animate)
     const delta = this.clock.getDelta()
+    const elapsed = this.clock.getElapsedTime()
+    this.drift.update(delta)
     this.agents.update(delta, this.camera)
+    this.fog.update(elapsed)
     this.renderer.render(this.scene, this.camera)
   }
 
@@ -145,8 +156,10 @@ export class SceneManager {
   dispose() {
     if (this.animationId) cancelAnimationFrame(this.animationId)
     this.unsubscribe?.()
+    this.unsubEvents?.()
     window.removeEventListener('resize', this.onResize)
     this.input.dispose()
+    this.fog.dispose()
     this.renderer.dispose()
     this.container.removeChild(this.renderer.domElement)
   }

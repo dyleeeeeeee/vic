@@ -3,19 +3,19 @@
   import { uiStore } from '../stores/uiStore'
 
   let name = $state('')
-  let model = $state('claude-sonnet-4-20250514')
+  let model = $state('us.anthropic.claude-sonnet-4-20250514-v1:0')
   let systemPrompt = $state('You are a helpful AI agent. Complete the tasks given to you.')
   let apiKey = $state('')
   let team = $state('development')
 
   function submit() {
-    if (!name.trim() || !apiKey.trim()) return
+    if (!name.trim()) return
     agentStore.send('create_agent', {
       config: {
         name: name.trim(),
         model,
         system_prompt: systemPrompt,
-        api_key: apiKey,
+        ...(apiKey.trim() ? { api_key: apiKey } : {}),
         team,
       }
     })
@@ -61,13 +61,13 @@
     </label>
 
     <label>
-      <span>API Key</span>
-      <input bind:value={apiKey} type="password" placeholder="sk-ant-..." />
+      <span>API Key (optional, uses server credentials if blank)</span>
+      <input bind:value={apiKey} type="password" placeholder="Leave blank to use server auth" />
     </label>
 
     <div class="actions">
       <button class="secondary" onclick={() => uiStore.closeCreateModal()}>Cancel</button>
-      <button class="primary" onclick={submit} disabled={!name.trim() || !apiKey.trim()}>Create</button>
+      <button class="primary" onclick={submit} disabled={!name.trim()}>Create</button>
     </div>
   </div>
 </div>

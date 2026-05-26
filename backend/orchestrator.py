@@ -36,10 +36,10 @@ class Orchestrator:
 
         agent = Agent(
             state=state,
-            api_key=config.api_key,
             on_update=self._on_agent_update,
             on_message_agent=self._on_message_agent,
             workdir=f"/tmp/vic/{agent_id}",
+            api_key=config.api_key or None,
         )
 
         self._agents[agent_id] = agent

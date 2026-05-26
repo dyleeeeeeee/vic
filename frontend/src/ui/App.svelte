@@ -7,6 +7,7 @@
   import Inspector from './Inspector.svelte'
   import Tooltip from './Tooltip.svelte'
   import CreateModal from './CreateModal.svelte'
+  import ReplayScrubber from './ReplayScrubber.svelte'
 
   let canvasContainer: HTMLDivElement
   let sceneManager: SceneManager | null = null
@@ -57,6 +58,8 @@
   {#if createModalOpen}
     <CreateModal />
   {/if}
+
+  <ReplayScrubber />
 </div>
 
 <style>

@@ -20,7 +20,7 @@ class AgentConfig(BaseModel):
     model: str = "claude-sonnet-4-20250514"
     system_prompt: str = "You are a helpful AI agent. Complete the tasks given to you."
     tools: list[str] = ["terminal", "file_read", "file_write", "message_agent", "ask_user"]
-    api_key: str
+    api_key: str = ""
     x: float = 0.0
     y: float = 0.0
     team: str = "default"
