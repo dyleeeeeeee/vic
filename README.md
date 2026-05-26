@@ -1,4 +1,4 @@
-# SwarmHQ
+# Vic
 
 Multi-agent orchestration UI. Spawn, monitor, and task autonomous AI agents from a single canvas.
 

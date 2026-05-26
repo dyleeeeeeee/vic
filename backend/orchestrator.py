@@ -37,7 +37,7 @@ class Orchestrator:
             api_key=config.api_key,
             on_update=self._on_agent_update,
             on_message_agent=self._on_message_agent,
-            workdir=f"/tmp/swarmhq/{agent_id}",
+            workdir=f"/tmp/vic/{agent_id}",
         )
 
         self._agents[agent_id] = agent

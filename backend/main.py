@@ -9,9 +9,9 @@ from models import AgentConfig, WSEvent
 from orchestrator import Orchestrator
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("swarmhq")
+logger = logging.getLogger("vic")
 
-app = FastAPI(title="SwarmHQ", version="0.1.0")
+app = FastAPI(title="Vic", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -41,7 +41,7 @@ async def broadcast(event: WSEvent):
 async def startup():
     global orchestrator
     orchestrator = Orchestrator(on_event=broadcast)
-    logger.info("SwarmHQ orchestrator ready")
+    logger.info("Vic orchestrator ready")
 
 
 # ── WebSocket ─────────────────────────────────

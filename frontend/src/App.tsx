@@ -102,7 +102,7 @@ export default function App() {
             letterSpacing: '0.08em',
           }}
         >
-          ◈ swarmhq
+          ◈ vic
         </span>
 
         <div style={{ flex: 1 }} />
