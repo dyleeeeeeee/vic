@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models import AgentConfig, WSEvent
 from orchestrator import Orchestrator
+from event_store import EventStore
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("vic")
@@ -23,11 +24,14 @@ app.add_middleware(
 
 _clients: list[WebSocket] = []
 orchestrator: Orchestrator = None
+event_store: EventStore = None
 
 
 async def broadcast(event: WSEvent):
     dead = []
     payload = event.model_dump_json()
+    if event_store:
+        event_store.write(event.model_dump())
     for ws in _clients:
         try:
             await ws.send_text(payload)
@@ -39,7 +43,8 @@ async def broadcast(event: WSEvent):
 
 @app.on_event("startup")
 async def startup():
-    global orchestrator
+    global orchestrator, event_store
+    event_store = EventStore()
     orchestrator = Orchestrator(on_event=broadcast)
     logger.info("Vic orchestrator ready")
 
@@ -127,6 +132,14 @@ async def delete_agent(agent_id: str):
 @app.get("/agents/{agent_id}/messages")
 async def get_messages(agent_id: str):
     return orchestrator.get_messages(agent_id)
+
+
+@app.get("/events")
+async def get_events(from_ts: float = 0, to_ts: float = 0, agent_id: str = None):
+    import time as _time
+    if to_ts == 0:
+        to_ts = _time.time()
+    return event_store.query(from_ts, to_ts, agent_id)
 
 
 # ── entrypoint ────────────────────────────────

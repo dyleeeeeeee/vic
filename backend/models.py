@@ -23,6 +23,8 @@ class AgentConfig(BaseModel):
     api_key: str
     x: float = 0.0
     y: float = 0.0
+    team: str = "default"
+    building_id: Optional[str] = None
 
 
 class Message(BaseModel):
@@ -43,6 +45,8 @@ class AgentState(BaseModel):
     pending_question: Optional[str] = None  # set when status==WAITING
     x: float = 0.0
     y: float = 0.0
+    team: str = "default"
+    building_id: Optional[str] = None
     created_at: float = Field(default_factory=time.time)
 
 

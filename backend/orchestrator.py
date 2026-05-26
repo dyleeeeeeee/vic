@@ -30,6 +30,8 @@ class Orchestrator:
             system_prompt=config.system_prompt,
             x=config.x,
             y=config.y,
+            team=config.team,
+            building_id=config.building_id,
         )
 
         agent = Agent(
