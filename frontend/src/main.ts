@@ -1,10 +1,11 @@
+import { mount } from 'svelte'
 import App from './ui/App.svelte'
 import { agentStore } from './stores/agentStore'
 
-agentStore.connect()
-
-const app = new App({
+const app = mount(App, {
   target: document.getElementById('app')!,
 })
+
+agentStore.connect()
 
 export default app
