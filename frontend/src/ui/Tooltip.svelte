@@ -21,30 +21,37 @@
     top: 60px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(20, 20, 24, 0.85);
+    background: rgba(39, 39, 41, 0.9);
     backdrop-filter: saturate(180%) blur(20px);
-    border-radius: 8px;
-    padding: 8px 12px;
+    border-radius: 11px;
+    padding: 12px 16px;
     z-index: 80;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     pointer-events: none;
   }
   .name {
-    font-size: 13px;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
     font-weight: 600;
-    color: #f1f5f9;
+    line-height: 1.29;
+    letter-spacing: -0.224px;
+    color: #ffffff;
   }
   .status {
-    font-size: 11px;
-    color: #94a3b8;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    color: #cccccc;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
   }
   .task {
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
     font-size: 12px;
-    color: #94a3b8;
-    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    color: #cccccc;
   }
 </style>

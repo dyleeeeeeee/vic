@@ -23,7 +23,7 @@ export class SceneManager {
 
   constructor(private container: HTMLElement) {
     this.scene = new THREE.Scene()
-    this.scene.background = new THREE.Color(0x0c0c0f)
+    this.scene.background = new THREE.Color(0x1d1d1f)
     this.clock = new THREE.Clock()
 
     const aspect = container.clientWidth / container.clientHeight
@@ -83,7 +83,7 @@ export class SceneManager {
     const gridSize = 24
     const geo = new THREE.PlaneGeometry(gridSize, gridSize)
     const mat = new THREE.MeshStandardMaterial({
-      color: 0x1a1a1e,
+      color: 0x252527,
       roughness: 0.9,
       metalness: 0.0,
     })
@@ -94,7 +94,7 @@ export class SceneManager {
     this.scene.add(ground)
 
     // Subtle grid lines
-    const grid = new THREE.GridHelper(gridSize, 12, 0x2a2a2e, 0x1e1e22)
+    const grid = new THREE.GridHelper(gridSize, 12, 0x333333, 0x2a2a2c)
     grid.position.y = 0.01
     this.scene.add(grid)
   }

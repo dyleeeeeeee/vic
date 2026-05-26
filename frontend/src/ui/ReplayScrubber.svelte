@@ -61,13 +61,13 @@
 
 {#if !active}
   <button class="replay-trigger" onclick={enterReplay} disabled={loading}>
-    {loading ? '...' : '⏪'}
+    {loading ? '...' : 'Replay'}
   </button>
 {:else}
   <div class="scrubber">
-    <button class="scrubber-btn" onclick={exitReplay} title="Exit replay">✕</button>
+    <button class="scrubber-btn" onclick={exitReplay} title="Exit replay">&times;</button>
     <button class="scrubber-btn" onclick={togglePlay} title={playing ? 'Pause' : 'Play'}>
-      {playing ? '⏸' : '▶'}
+      {playing ? '||' : '▶'}
     </button>
     <span class="time">{formatTime(replayStore.startTime)}</span>
     <input
@@ -90,36 +90,39 @@
 <style>
   .replay-trigger {
     position: fixed;
-    bottom: 16px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(20, 20, 24, 0.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(39, 39, 41, 0.85);
+    backdrop-filter: saturate(180%) blur(20px);
+    border: none;
     border-radius: 9999px;
-    padding: 8px 16px;
-    color: #94a3b8;
+    padding: 8px 20px;
+    color: #2997ff;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
     font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.224px;
     cursor: pointer;
     z-index: 100;
-    transition: color 150ms;
+    transition: transform 150ms ease-out;
   }
-  .replay-trigger:hover { color: #f1f5f9; }
+  .replay-trigger:hover { color: #ffffff; }
+  .replay-trigger:active { transform: translateX(-50%) scale(0.95); }
   .replay-trigger:disabled { opacity: 0.4; cursor: wait; }
 
   .scrubber {
     position: fixed;
-    bottom: 16px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(20, 20, 24, 0.9);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
-    padding: 8px 16px;
+    background: rgba(39, 39, 41, 0.9);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 9999px;
+    padding: 10px 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     z-index: 100;
     min-width: 480px;
   }
@@ -127,18 +130,20 @@
   .scrubber-btn {
     background: none;
     border: none;
-    color: #94a3b8;
+    color: #cccccc;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
     font-size: 14px;
     cursor: pointer;
     padding: 4px 8px;
-    border-radius: 4px;
-    transition: color 150ms;
+    border-radius: 9999px;
+    transition: color 150ms, transform 150ms;
   }
-  .scrubber-btn:hover { color: #f1f5f9; }
+  .scrubber-btn:hover { color: #ffffff; }
+  .scrubber-btn:active { transform: scale(0.95); }
   .scrubber-btn.speed {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    color: #2997ff;
   }
 
   .timeline {
@@ -152,32 +157,35 @@
   }
   .timeline::-webkit-slider-thumb {
     appearance: none;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: #10b981;
+    background: #0066cc;
     cursor: grab;
   }
   .timeline::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: #10b981;
+    background: #0066cc;
     border: none;
     cursor: grab;
   }
 
   .time {
-    font-size: 11px;
-    color: #64748b;
-    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    color: #7a7a7a;
     white-space: nowrap;
   }
 
   .event-count {
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
     font-size: 10px;
-    color: #475569;
-    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-weight: 400;
+    color: #7a7a7a;
     white-space: nowrap;
   }
 </style>

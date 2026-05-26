@@ -32,7 +32,7 @@
 <svelte:window on:keydown={onKeydown} />
 
 <div class="backdrop" role="button" tabindex="-1" onclick={() => uiStore.closeCreateModal()} onkeydown={(e) => { if (e.key === 'Escape') uiStore.closeCreateModal() }}>
-  <div class="modal" role="dialog" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
+  <div class="modal" role="dialog" tabindex="-1" onclick={(e) => e.stopPropagation()} onkeydown={(e) => e.stopPropagation()}>
     <h2>Create Agent</h2>
 
     <label>
@@ -61,7 +61,7 @@
     </label>
 
     <label>
-      <span>API Key (optional, uses server credentials if blank)</span>
+      <span>API Key (optional)</span>
       <input bind:value={apiKey} type="password" placeholder="Leave blank to use server auth" />
     </label>
 
@@ -83,77 +83,97 @@
     justify-content: center;
   }
   .modal {
-    background: #141418;
-    border-radius: 12px;
-    padding: 24px;
-    width: 400px;
+    background: #272729;
+    border-radius: 18px;
+    padding: 32px;
+    width: 420px;
     max-width: 90vw;
   }
   h2 {
-    font-size: 20px;
+    font-family: "SF Pro Display", system-ui, -apple-system, sans-serif;
+    font-size: 28px;
     font-weight: 600;
-    letter-spacing: -0.2px;
-    margin: 0 0 16px;
+    line-height: 1.14;
+    letter-spacing: 0.196px;
+    color: #ffffff;
+    margin: 0 0 24px;
   }
   label {
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 17px;
   }
   label span {
-    font-size: 11px;
-    font-weight: 500;
-    color: #94a3b8;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    color: #cccccc;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
   input, select, textarea {
     width: 100%;
-    background: #1a1a1e;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: #1d1d1f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
-    padding: 8px 12px;
-    color: #f1f5f9;
-    font-size: 14px;
-    font-family: inherit;
+    padding: 11px 14px;
+    color: #ffffff;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.47;
+    letter-spacing: -0.374px;
     outline: none;
+    transition: border-color 150ms;
   }
   input:focus, select:focus, textarea:focus {
-    border-color: #10b981;
+    border-color: #0066cc;
   }
   textarea {
     resize: vertical;
-    font-family: "JetBrains Mono", "SF Mono", monospace;
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 1.43;
+    letter-spacing: -0.224px;
   }
   .actions {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     justify-content: flex-end;
-    margin-top: 16px;
+    margin-top: 24px;
   }
   .primary {
-    background: #10b981;
-    color: white;
+    background: #0066cc;
+    color: #ffffff;
     border: none;
     border-radius: 9999px;
-    padding: 8px 20px;
-    font-size: 14px;
-    font-weight: 500;
+    padding: 11px 22px;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.374px;
     cursor: pointer;
     transition: transform 150ms ease-out;
   }
   .primary:active { transform: scale(0.95); }
   .primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .primary:focus-visible {
+    outline: 2px solid #0071e3;
+    outline-offset: 2px;
+  }
   .secondary {
     background: transparent;
-    color: #94a3b8;
+    color: #cccccc;
     border: none;
     border-radius: 9999px;
-    padding: 8px 20px;
-    font-size: 14px;
+    padding: 11px 22px;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.374px;
     cursor: pointer;
+    transition: transform 150ms ease-out;
   }
-  .secondary:hover { color: #f1f5f9; }
+  .secondary:hover { color: #ffffff; }
+  .secondary:active { transform: scale(0.95); }
 </style>

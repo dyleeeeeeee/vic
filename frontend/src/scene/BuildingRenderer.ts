@@ -9,10 +9,10 @@ interface BuildingConfig {
 }
 
 const DEFAULT_BUILDINGS: BuildingConfig[] = [
-  { id: 'arch', team: 'architecture', position: new THREE.Vector3(-6, 0, -4), color: 0x10b981, size: { w: 3, h: 2.5, d: 3 } },
-  { id: 'dev', team: 'development', position: new THREE.Vector3(4, 0, -4), color: 0x3b82f6, size: { w: 3.5, h: 3, d: 3 } },
-  { id: 'review', team: 'review', position: new THREE.Vector3(-6, 0, 5), color: 0xf59e0b, size: { w: 2.5, h: 2, d: 2.5 } },
-  { id: 'ops', team: 'operations', position: new THREE.Vector3(4, 0, 5), color: 0x8b5cf6, size: { w: 3, h: 2, d: 3 } },
+  { id: 'arch', team: 'architecture', position: new THREE.Vector3(-6, 0, -4), color: 0x0066cc, size: { w: 3, h: 2.5, d: 3 } },
+  { id: 'dev', team: 'development', position: new THREE.Vector3(4, 0, -4), color: 0x0066cc, size: { w: 3.5, h: 3, d: 3 } },
+  { id: 'review', team: 'review', position: new THREE.Vector3(-6, 0, 5), color: 0x0066cc, size: { w: 2.5, h: 2, d: 2.5 } },
+  { id: 'ops', team: 'operations', position: new THREE.Vector3(4, 0, 5), color: 0x0066cc, size: { w: 3, h: 2, d: 3 } },
 ]
 
 export class BuildingRenderer {
@@ -34,7 +34,7 @@ export class BuildingRenderer {
     // Main body
     const geo = new THREE.BoxGeometry(config.size.w, config.size.h, config.size.d)
     const mat = new THREE.MeshStandardMaterial({
-      color: 0x1e1e22,
+      color: 0x2a2a2c,
       roughness: 0.7,
       metalness: 0.1,
     })
@@ -88,9 +88,9 @@ export class BuildingRenderer {
     const ctx = canvas.getContext('2d')!
     ctx.fillStyle = 'transparent'
     ctx.fillRect(0, 0, 256, 64)
-    ctx.font = '600 24px -apple-system, BlinkMacSystemFont, Inter, sans-serif'
+    ctx.font = '600 24px "SF Pro Display", system-ui, -apple-system, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillStyle = '#f1f5f9'
+    ctx.fillStyle = '#ffffff'
     ctx.fillText(text.toUpperCase(), 128, 40)
 
     const texture = new THREE.CanvasTexture(canvas)

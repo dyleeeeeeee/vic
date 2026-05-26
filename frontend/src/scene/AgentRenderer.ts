@@ -2,12 +2,12 @@ import * as THREE from 'three'
 import type { AgentStatus } from '../stores/agentStore'
 
 const STATUS_COLORS: Record<AgentStatus, number> = {
-  running: 0x10b981,
-  idle: 0x64748b,
+  running: 0x0066cc,
+  idle: 0x333333,
   waiting: 0x8b5cf6,
   blocked: 0xf59e0b,
   error: 0xef4444,
-  done: 0x6ee7b7,
+  done: 0x34d399,
 }
 
 const STATUS_ANIMATIONS: Record<AgentStatus, string> = {
@@ -199,7 +199,7 @@ export class AgentRenderer {
         break
       case 'blocked':
         // Exclamation
-        ctx.font = 'bold 36px sans-serif'
+        ctx.font = '600 36px "SF Pro Display", system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.fillText('!', 32, 42)
         break
@@ -212,7 +212,7 @@ export class AgentRenderer {
         break
       case 'waiting':
         // Question mark
-        ctx.font = 'bold 32px sans-serif'
+        ctx.font = '600 32px "SF Pro Display", system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.fillText('?', 32, 42)
         break
@@ -242,8 +242,7 @@ export class AgentRenderer {
   }
 
   private getAgentColor(id: string): number {
-    // Deterministic color from agent ID
-    const colors = [0x3b82f6, 0x10b981, 0xf59e0b, 0x8b5cf6, 0xec4899, 0x06b6d4, 0xf97316, 0x84cc16]
+    const colors = [0x4a4a4e, 0x3a3a3e, 0x5a5a5e, 0x454549, 0x505054, 0x3f3f43, 0x484850, 0x424246]
     let hash = 0
     for (let i = 0; i < id.length; i++) {
       hash = ((hash << 5) - hash) + id.charCodeAt(i)

@@ -6,12 +6,12 @@
 
 <header class="topbar">
   <div class="left">
-    <span class="logo">&#x25C8; vic</span>
+    <span class="logo">vic</span>
   </div>
   <div class="right">
-    <button class="create-btn" onclick={() => uiStore.openCreateModal()}>+ Agent</button>
     <span class="count">{agentCount} agent{agentCount !== 1 ? 's' : ''}</span>
     <span class="dot" class:connected></span>
+    <button class="create-btn" onclick={() => uiStore.openCreateModal()}>+ Agent</button>
   </div>
 </header>
 
@@ -21,22 +21,20 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 42px;
-    background: #0a0a0e;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    height: 44px;
+    background: #000000;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 0 20px;
     z-index: 100;
-    font-size: 12px;
   }
   .logo {
-    color: #10b981;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    font-size: 11px;
-    text-transform: uppercase;
+    font-family: "SF Pro Display", system-ui, -apple-system, sans-serif;
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: 0.231px;
+    color: #ffffff;
   }
   .right {
     display: flex;
@@ -44,7 +42,11 @@
     gap: 12px;
   }
   .count {
-    color: #475569;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    color: #cccccc;
   }
   .dot {
     width: 8px;
@@ -53,20 +55,26 @@
     background: #ef4444;
   }
   .dot.connected {
-    background: #10b981;
+    background: #34d399;
   }
   .create-btn {
-    background: transparent;
-    border: 1px solid #10b981;
-    color: #10b981;
+    background: #0066cc;
+    border: none;
+    color: #ffffff;
     border-radius: 9999px;
-    padding: 4px 12px;
-    font-size: 11px;
-    font-weight: 500;
+    padding: 8px 16px;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.224px;
     cursor: pointer;
     transition: transform 150ms ease-out;
   }
   .create-btn:active {
     transform: scale(0.95);
+  }
+  .create-btn:focus-visible {
+    outline: 2px solid #0071e3;
+    outline-offset: 2px;
   }
 </style>

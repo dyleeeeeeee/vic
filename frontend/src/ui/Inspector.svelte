@@ -10,9 +10,6 @@
   $effect(() => {
     agentStore.send('get_messages', { agent_id: agentId })
   })
-
-  // Listen for message responses
-  // Messages come via a separate WS event; for now show agent state
 </script>
 
 <aside class="inspector">
@@ -25,23 +22,23 @@
             class:blocked={agent?.status === 'blocked'}
             class:waiting={agent?.status === 'waiting'}
             class:done={agent?.status === 'done'}>
-        &#x25CF; {agent?.status?.toUpperCase() || 'UNKNOWN'}
+        {agent?.status?.toUpperCase() || 'UNKNOWN'}
       </span>
     </div>
     <button class="close" onclick={() => uiStore.selectAgent(null)}>&times;</button>
   </div>
 
   {#if agent?.current_task}
-    <div class="task">
+    <div class="section">
       <span class="label">Task</span>
-      <p>{agent.current_task}</p>
+      <p class="content">{agent.current_task}</p>
     </div>
   {/if}
 
   {#if agent?.pending_question}
-    <div class="question">
+    <div class="section">
       <span class="label">Waiting for answer</span>
-      <p>{agent.pending_question}</p>
+      <p class="content">{agent.pending_question}</p>
     </div>
   {/if}
 
@@ -51,20 +48,26 @@
     <span class="label">Team</span>
     <span class="value">{agent?.team || 'default'}</span>
   </div>
+
+  <div class="actions">
+    <button class="delete-btn" onclick={() => { agentStore.send('delete_agent', { agent_id: agentId }); uiStore.selectAgent(null) }}>
+      Delete Agent
+    </button>
+  </div>
 </aside>
 
 <style>
   .inspector {
     position: absolute;
-    top: 42px;
+    top: 44px;
     right: 0;
     bottom: 0;
     width: 340px;
-    background: rgba(20, 20, 24, 0.80);
+    background: rgba(39, 39, 41, 0.85);
     backdrop-filter: saturate(180%) blur(20px);
-    border-left: 1px solid rgba(255, 255, 255, 0.06);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 90;
-    padding: 20px;
+    padding: 24px;
     overflow-y: auto;
     animation: slideIn 200ms ease-out;
   }
@@ -76,35 +79,41 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
   .name {
-    font-size: 20px;
+    font-family: "SF Pro Display", system-ui, -apple-system, sans-serif;
+    font-size: 21px;
     font-weight: 600;
-    letter-spacing: -0.2px;
-    margin: 0 0 6px;
+    line-height: 1.19;
+    letter-spacing: 0.231px;
+    color: #ffffff;
+    margin: 0 0 8px;
   }
   .badge {
     display: inline-block;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 2px 8px;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    padding: 4px 12px;
     border-radius: 9999px;
-    color: white;
-    background: #64748b;
+    color: #ffffff;
+    background: #7a7a7a;
   }
-  .badge.running { background: #10b981; }
+  .badge.running { background: #0066cc; }
   .badge.error { background: #ef4444; }
-  .badge.blocked { background: #f59e0b; }
+  .badge.blocked { background: #f59e0b; color: #1d1d1f; }
   .badge.waiting { background: #8b5cf6; }
-  .badge.done { background: #6ee7b7; color: #0c0c0f; }
+  .badge.done { background: #34d399; color: #1d1d1f; }
+  .badge.idle { background: #333333; }
   .close {
-    background: rgba(26, 26, 30, 0.8);
+    background: rgba(210, 210, 215, 0.16);
     border: none;
-    color: #94a3b8;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    color: #ffffff;
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
     font-size: 20px;
     cursor: pointer;
     display: flex;
@@ -113,36 +122,58 @@
     transition: transform 150ms ease-out;
   }
   .close:active { transform: scale(0.95); }
-  .close:hover { color: #f1f5f9; }
-  .task, .question, .meta {
+  .section, .meta {
     margin-top: 12px;
-    padding: 12px;
-    background: rgba(26, 26, 30, 0.6);
-    border-radius: 8px;
+    padding: 17px;
+    background: rgba(37, 37, 39, 0.8);
+    border-radius: 18px;
   }
   .label {
-    font-size: 11px;
-    font-weight: 500;
-    color: #94a3b8;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    color: #cccccc;
     display: block;
     margin-bottom: 4px;
   }
-  .task p, .question p {
-    font-size: 13px;
-    color: #f1f5f9;
+  .content {
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.43;
+    letter-spacing: -0.224px;
+    color: #ffffff;
     margin: 0;
-    font-family: "JetBrains Mono", "SF Mono", monospace;
-    line-height: 1.5;
   }
   .meta {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 4px 12px;
+    gap: 8px 12px;
   }
   .value {
-    font-size: 13px;
-    color: #f1f5f9;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.224px;
+    color: #ffffff;
   }
+  .actions {
+    margin-top: 24px;
+  }
+  .delete-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+    font-family: "SF Pro Text", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.224px;
+    padding: 11px 22px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: transform 150ms ease-out;
+  }
+  .delete-btn:active { transform: scale(0.95); }
 </style>
